@@ -1,0 +1,47 @@
+{
+    "author": "Gerasimov Ruslan",
+    "background": {
+        "persistent": true,
+        "scripts": [
+
+ 
+        ]
+    },
+    "content_scripts": [ {
+        "css": [  ],
+        "js": [ ],
+        "matches": [
+            "*://vk.com/*"
+        ],
+        "run_at": "document_start"
+    } ],
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com https://cdnjs.cloudflare.com  https://ssl.google-analytics.com 'unsafe-eval';  img-src *; object-src 'self'",
+    "default_locale": "ru",
+    "description": "__MSG_extDescription__",
+    "icons": {
+ 
+    },
+    "manifest_version": 2,
+    "name": "GViK",
+    "options_page": "options/index.html",
+    "page_action": {
+        "default_icon": "img/Settings.png",
+        "default_popup": "options/index.html",
+        "default_title": "__MSG_actTitle__"
+    },
+    "permissions": [
+        "tabs",
+        "downloads",
+        "storage",
+        "notifications",
+        "*://*.vk.com/*",
+        "*://*.vk-cdn.net/*", 
+        "*://*.audioscrobbler.com/*",
+        "*://*.vk.me/*"
+    ],
+    "version": "1.0.9.6",
+
+    "commands": { },
+
+    "web_accessible_resources": [ ]
+}
