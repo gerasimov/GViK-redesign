@@ -1,10 +1,20 @@
 {
   "presets": [
     "flow",
-    "latest"
+    [
+      "latest",
+      {
+        "es2015": {
+          "modules": "commonjs"
+        },
+        "es2017": false
+      }
+    ]
   ],
   "plugins": [
+    "syntax-async-functions",
     "transform-class-properties",
     "transform-object-rest-spread"
-  ]
+  ],
+  "retainLines": true
 }

@@ -4,11 +4,24 @@ import (
 	"fmt"
 )
 
-func getChromePath() string {
-	return "chrome.exe"
+type test struct {
+	Path  string `json:"path"`
+	Child []test `json:"child"`
+}
+
+type data struct {
+}
+
+func (f *data) alert() int {
+	return 32
+}
+
+func getChromePath() *test {
+	return &test{Path: "chrome.exe", Child: []test{}}
 }
 
 func main() {
-	var path string = getChromePath()
-	fmt.Println(path)
+	//val, _ := json.Marshal(getChromePath())
+	f := data{}
+	fmt.Println(f.alert())
 }
