@@ -1,6 +1,6 @@
-import BackgroundChannel from './../../core/channels/background'
+import BackgroundChannel from "./../../core/channels/background";
 
-const channel = new BackgroundChannel()
-channel.connect()
+const channel = new BackgroundChannel();
+channel.connect();
 
-export default channel
+export default channel;

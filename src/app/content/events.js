@@ -1,13 +1,13 @@
 /* global chrome:true */
 
-import channel from './channel'
+import channel from "./channel";
 
 chrome.storage.onChanged.addListener(arg =>
   channel.sendToInclude({
-    handler: 'event',
+    handler: "event",
     event: {
-      name: 'storage.onChanged',
+      name: "storage.onChanged",
       arg
     }
   })
-)
+);

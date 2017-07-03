@@ -5,6 +5,7 @@ type DeferredCaller = {
   id: number,
   type: string
 };
+
 /**
  * @class Deferred
  */
@@ -20,20 +21,20 @@ export default class Deferred {
    * @return {any}
    */
   static runByType = (deferredCaller: DeferredCaller, data: any): any => {
-    const { id, type } = deferredCaller
-    const deferred: Deferred = Deferred.instances[id]
+    const { id, type } = deferredCaller;
+    const deferred: Deferred = Deferred.instances[id];
 
     if (!deferred) {
-      return false
+      return false;
     }
 
     switch (type) {
-      case 'resolve':
-        return deferred.resolve(data)
-      case 'reject':
-        return deferred.reject(data)
+      case "resolve":
+        return deferred.resolve(data);
+      case "reject":
+        return deferred.reject(data);
       default:
-        return Deferred.removeById(id)
+        return Deferred.removeById(id);
     }
   };
 
@@ -47,21 +48,21 @@ export default class Deferred {
    * @param {Boolean} idRequired
    * @constructor
    */
-  constructor (idRequired: boolean = false) {
+  constructor(idRequired: boolean = false) {
     this.promise = new Promise((resolve, reject) => {
       this.resolve = (...args): Promise<any> => {
-        resolve(...args)
-        Deferred.removeById(this.id)
-        return this.promise
-      }
+        resolve(...args);
+        Deferred.removeById(this.id);
+        return this.promise;
+      };
       this.reject = (...args): Promise<any> => {
-        reject(...args)
-        Deferred.removeById(this.id)
-        return this.promise
-      }
-    })
+        reject(...args);
+        Deferred.removeById(this.id);
+        return this.promise;
+      };
+    });
     if (idRequired) {
-      this.id = Deferred.instances.push(this) - 1
+      this.id = Deferred.instances.push(this) - 1;
     }
   }
 }

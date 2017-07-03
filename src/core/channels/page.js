@@ -1,6 +1,6 @@
 // @flow
 
-import BackgroundChannel from './background'
+import BackgroundChannel from "./background";
 
 /**
  * @class Content

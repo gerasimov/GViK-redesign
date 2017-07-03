@@ -1,17 +1,13 @@
 /* global AudioPlayer, getAudioPlayer */
 
-import Events from './../../../core/events'
+import Events from "./../../../core/events";
 
-const ap = getAudioPlayer()
+const ap = getAudioPlayer();
 
-ap.on(null, AudioPlayer.EVENT_UPDATE, (...args) =>
-  Events.dispatch('AUDIO_PLAYER_UPDATE', ...args)
-)
-ap.on(null, AudioPlayer.EVENT_PAUSE, (...args) =>
-  Events.dispatch('AUDIO_PLAYER_PAUSE', ...args)
-)
-ap.on(null, AudioPlayer.EVENT_PROGRESS, (...args) =>
-  Events.dispatch('AUDIO_PLAYER_PROGRESS', ...args)
-)
-
-Events.push()
+Object.keys(window.AudioPlayer)
+  .filter(key => ~key.indexOf("EVENT_"))
+  .forEach(eventName =>
+    ap.on(null, AudioPlayer[eventName], (...args) =>
+      Events.dispatch(`audioPlayer.${eventName}`, ...args)
+    )
+  );

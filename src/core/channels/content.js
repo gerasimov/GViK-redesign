@@ -7,12 +7,12 @@ import {
   INCLUDE,
   INCLUDE_SEND,
   CONTENT_SEND
-} from './constants'
+} from "./constants";
 
-import { triggerCustomEvent, bindCustomEvent } from './../../helpers'
+import { triggerCustomEvent, bindCustomEvent } from "./../../helpers";
 
-import Channel from './channel'
-import Deferred from '../deferred'
+import Channel from "./channel";
+import Deferred from "../deferred";
 
 /**
  * @class Content
@@ -25,22 +25,22 @@ export default class ContentChannel extends Channel {
    */
   connect = (): void => {
     if (ContentChannel.disconnected) {
-      return
+      return;
     }
     bindCustomEvent(INCLUDE_SEND, (e: CustomEvent): any =>
       this.onMessage(JSON.parse(e.detail))
-    )
+    );
 
-    this.port = window.chrome.runtime.connect()
-    this.port.onMessage.addListener(this.onMessage)
-    this.port.onDisconnect.addListener(this.onDisconnect)
+    this.port = window.chrome.runtime.connect();
+    this.port.onMessage.addListener(this.onMessage);
+    this.port.onDisconnect.addListener(this.onDisconnect);
   };
 
   /**
    *
    */
   onDisconnect = () => {
-    ContentChannel.disconnected = true
+    ContentChannel.disconnected = true;
   };
 
   /**
@@ -49,17 +49,17 @@ export default class ContentChannel extends Channel {
    */
 
   onMessage = (response: any) => {
-    const { from, to } = response
+    const { from, to } = response;
 
     switch (to) {
       case CONTENT:
-        this._onMessage(response)
-        break
+        this._onMessage(response);
+        break;
       case BACKGROUND:
       case INCLUDE:
       default:
-        this.send(response, to, from)
-        break
+        this.send(response, to, from);
+        break;
     }
   };
 
@@ -71,36 +71,36 @@ export default class ContentChannel extends Channel {
    */
 
   send = (data: any, to: number, from: number = CONTENT): Promise<any> => {
-    let params: Object | any
+    let params: Object | any;
 
-    const deferred: Deferred = new Deferred(true)
+    const deferred: Deferred = new Deferred(true);
 
     switch (from) {
       case CONTENT:
-        params = { data, to, from, deferred: { id: deferred.id } }
-        break
+        params = { data, to, from, deferred: { id: deferred.id } };
+        break;
       case BACKGROUND:
       case INCLUDE:
       default:
-        params = data
-        deferred.resolve(`Resend from ${from} to ${to}`)
-        break
+        params = data;
+        deferred.resolve(`Resend from ${from} to ${to}`);
+        break;
     }
 
     switch (to) {
       case INCLUDE:
-        triggerCustomEvent(CONTENT_SEND, JSON.stringify(params))
-        break
+        triggerCustomEvent(CONTENT_SEND, JSON.stringify(params));
+        break;
       case BACKGROUND:
         if (ContentChannel.disconnected) {
-          return deferred.reject()
+          return deferred.reject();
         }
-        this.port.postMessage(params)
-        break
+        this.port.postMessage(params);
+        break;
       default:
-        break
+        break;
     }
-    return deferred.promise
+    return deferred.promise;
   };
 
   /**

@@ -5,6 +5,7 @@
  * @class Event
  */
 class Event {
+  static id = 0;
   /**
    * @param {string} name
    * @param {Function} handler
@@ -12,10 +13,12 @@ class Event {
    */
   name: string;
   dispatch: Function;
+  id: number;
 
-  constructor (name: string, dispatch: Function) {
-    this.name = name
-    this.dispatch = dispatch
+  constructor(name: string, dispatch: Function) {
+    this.name = name;
+    this.dispatch = dispatch;
+    this.id = Event.id++;
   }
 }
 /**
@@ -37,13 +40,30 @@ export default class Events {
    */
   static push = (...handles: Array<Event>) => {
     handles.forEach((eventHandle: Event): any => {
-      const list: Array<Event> = Events.map[eventHandle.name]
-      if (!list) {
-        return
+      const list: Array<Event> = Events.map[eventHandle.name] || [];
+
+      list.push(eventHandle);
+      Events.map[eventHandle.name] = list;
+    });
+  };
+
+  static remove = (event: Event): boolean => {
+    if (!(event instanceof Event)) {
+      return false;
+    }
+
+    const list = Events.map[event.name];
+
+    if (!list || !list.length) {
+      return false;
+    }
+
+    return list.some((curEvent: Event, index) => {
+      if (curEvent.id === event.id) {
+        list.splice(index, 1);
+        return true;
       }
-      list.push(eventHandle)
-      Events.map[eventHandle.name] = list
-    })
+    });
   };
 
   /**
@@ -52,17 +72,17 @@ export default class Events {
    * @return {Array}
    */
   static dispatch = (eventName: string, ...args: Array<any>): Promise<any> => {
-    const list: Array<Event> = Events.map[eventName]
+    const list: Array<Event> = Events.map[eventName];
 
     if (!list || list.length === 0) {
-      return Promise.resolve(null)
+      return Promise.resolve(null);
     }
 
     return Promise.all(
       list.map((eventHandle: Event): Promise<any> => {
-        const res: any = eventHandle.dispatch(...args)
-        return res instanceof Promise ? res : Promise.resolve(res)
+        const res: any = eventHandle.dispatch(...args);
+        return res instanceof Promise ? res : Promise.resolve(res);
       })
-    )
+    );
   };
 }

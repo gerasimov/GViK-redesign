@@ -6,12 +6,12 @@ import {
   INCLUDE,
   INCLUDE_SEND,
   CONTENT_SEND
-} from './constants'
+} from "./constants";
 
-import { triggerCustomEvent, bindCustomEvent } from './../../helpers'
+import { triggerCustomEvent, bindCustomEvent } from "./../../helpers";
 
-import Channel from './channel'
-import Deferred from '../deferred'
+import Channel from "./channel";
+import Deferred from "../deferred";
 /**
  * @class Include
  */
@@ -40,15 +40,15 @@ export default class IncludeChannel extends Channel {
    * @return {Promise}
    */
   send = (data: any, to: number, from: number = INCLUDE) => {
-    const deferred: Deferred = new Deferred(true)
+    const deferred: Deferred = new Deferred(true);
     const params: { [string]: any } = {
       data,
       to,
       from,
       deferred: { id: deferred.id }
-    }
-    triggerCustomEvent(INCLUDE_SEND, JSON.stringify(params))
-    return deferred.promise
+    };
+    triggerCustomEvent(INCLUDE_SEND, JSON.stringify(params));
+    return deferred.promise;
   };
 
   /**

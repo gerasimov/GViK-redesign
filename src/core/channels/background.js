@@ -1,10 +1,10 @@
 // @flow
 /* global window,Promise */
 
-import { CONTENT, BACKGROUND, INCLUDE } from './constants'
+import { CONTENT, BACKGROUND, INCLUDE } from "./constants";
 
-import Channel from './channel'
-import Deferred from '../deferred'
+import Channel from "./channel";
+import Deferred from "../deferred";
 
 /**
  * @class PortManager
@@ -17,8 +17,8 @@ class PortManager {
    *
    */
   push = port => {
-    this.ports[port.sender.tab.id] = port
-    this.current = port
+    this.ports[port.sender.tab.id] = port;
+    this.current = port;
   };
 
   /**
@@ -26,9 +26,9 @@ class PortManager {
    */
   remove = port => {
     if (this.current === port) {
-      this.current = Object.values(this.ports).slice(-1).pop()
+      this.current = Object.values(this.ports).slice(-1).pop();
     }
-    delete this.ports[port.sender.tab.id]
+    delete this.ports[port.sender.tab.id];
   };
 
   /**
@@ -49,9 +49,9 @@ export default class BackgroundChannel extends Channel {
   /**
    * @constructor
    */
-  constructor (...args: any[]) {
-    super(...args)
-    this.ports = BackgroundChannel.ports
+  constructor(...args: any[]) {
+    super(...args);
+    this.ports = BackgroundChannel.ports;
   }
 
   /**
@@ -59,9 +59,9 @@ export default class BackgroundChannel extends Channel {
    */
   connect = () =>
     window.chrome.runtime.onConnect.addListener((port: any) => {
-      port.onMessage.addListener(this.onMessage)
-      port.onDisconnect.addListener(() => this.ports.remove(port))
-      this.ports.push(port)
+      port.onMessage.addListener(this.onMessage);
+      port.onDisconnect.addListener(() => this.ports.remove(port));
+      this.ports.push(port);
     });
 
   /**
@@ -84,22 +84,22 @@ export default class BackgroundChannel extends Channel {
     from: number = BACKGROUND,
     port: ?Object = null
   ): Promise<any> => {
-    const deferred: Deferred = new Deferred(true)
+    const deferred: Deferred = new Deferred(true);
     const params: Object = {
       from,
       to,
       data,
       deferred: { id: deferred.id }
-    }
+    };
 
     if (port) {
-      port.postMessage(params)
+      port.postMessage(params);
     } else if (this.ports.current) {
-      this.ports.current.postMessage(params)
+      this.ports.current.postMessage(params);
     } else {
-      deferred.reject()
+      deferred.reject();
     }
-    return deferred.promise
+    return deferred.promise;
   };
 
   /**

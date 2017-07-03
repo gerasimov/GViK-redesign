@@ -1,6 +1,6 @@
-import ContentChannel from './../../core/channels/content'
+import ContentChannel from "./../../core/channels/content";
 
-const channel = new ContentChannel()
-channel.connect()
+const channel = new ContentChannel();
+channel.connect();
 
-export default channel
+export default channel;
