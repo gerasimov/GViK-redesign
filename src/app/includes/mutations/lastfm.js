@@ -2,38 +2,51 @@
 
 import { createMutation, connect } from "./../../../core/mutations";
 import LastFMAPI from "./../lastfm/api";
-const lastfm = new LastFMAPI();
 
-export const setSessionError = createMutation(
-  "SET_LAST_FM_SESSION_ERROR",
-  (_, { sessionError }) => ({ sessionError })
+
+const api = new LastFMAPI();
+
+const setSessionError = createMutation(
+    "SET_LAST_FM_SESSION_ERROR",
+    (_, { sessionError }) => ({ sessionError })
 );
 
-export const setSessionSuccess = createMutation(
-  "SET_LAST_FM_SESSION_SUCCESS",
-  (_, session) => ({ session })
+export const setSession = createMutation(
+    "SET_LAST_FM_SESSION",
+    (_, session) => ({ session }),
+    mutation => api.getSession().then(mutation).catch(setSessionError)
 );
 
-export const setSession = createMutation("SET_LAST_FM_SESSION", null, () =>
-  lastfm.getSession().then(setSessionSuccess).catch(setSessionError)
-);
+const setTrackInfoFail = createMutation("SET_LAST_FM_TRACK_INFO_FAIL", (_, error) => ({
+    track: error
+}));
 
-export const setTrackInfo = createMutation(
-  "SET_LAST_FM_TRACK_INFO",
-  (_, { track }) => ({ track })
+export const loadTrackInfo = createMutation(
+    "LOAD_LAST_FM_TRACK_INFO",
+(_, { track }) => ({ track }),
+    async (mutation, data) =>
+        await api.methods.track
+            .getInfo(data)
+            .then((res) => {
+                if (res.error) {
+                    return setTrackInfoFail(res)
+                }
+                return mutation(res)
+            })
+            .catch(setTrackInfoFail)
 );
 
 export default connect(
-  "lastfm",
-  {
-    sessionError: null,
-    session: null,
-    track: null
-  },
-  {
-    setSession,
-    setSessionError,
-    setSessionSuccess,
-    setTrackInfo
-  }
+    "lastfm",
+    {
+        sessionError: null,
+        session: null,
+        track: null
+    },
+    {
+        setSession,
+        setSessionError,
+        loadTrackInfo,
+        setTrackInfoFail
+    }
 );

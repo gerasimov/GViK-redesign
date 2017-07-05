@@ -3,33 +3,31 @@
     "background": {
         "persistent": true,
         "scripts": [
+            "libs.js",
             "core.js",
             "background.js"
         ]
     },
-    "content_scripts": [{
-        "css": [
-
-        ],
-        "js": [
-            "core.js",
-            "content.js"
-        ],
-        "matches": [
-            "*://vk.com/*"
-        ],
-        "run_at": "document_start"
-    }],
+    "content_scripts": [
+        {
+            "css": [],
+            "js": [
+                "libs.js",
+                "core.js",
+                "content.js"
+            ],
+            "matches": [
+                "*://vk.com/*"
+            ],
+            "run_at": "document_start"
+        }
+    ],
     "content_security_policy": "script-src 'self' https://www.google-analytics.com https://cdnjs.cloudflare.com  https://ssl.google-analytics.com 'unsafe-eval';  img-src *; object-src 'self'",
     "description": "VK",
-    "icons": {
-
-    },
+    "icons": {},
     "manifest_version": 2,
     "name": "GViK",
-    "page_action": {
-
-    },
+    "page_action": {},
     "permissions": [
         "tabs",
         "downloads",
@@ -42,9 +40,7 @@
         "*://*.vk.me/*"
     ],
     "version": "2.0.0",
-
     "commands": {},
-
     "web_accessible_resources": [
         "*"
     ]

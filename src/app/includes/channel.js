@@ -6,27 +6,23 @@ chan.connect();
 
 export default chan;
 
-export const sendToContent = chan.sendToContent;
-export const sendToBackground = chan.sendToBackground;
+export const sendToContent = chan.sendToContent.bind(chan);
+export const sendToBackground = chan.sendToBackground.bind(chan);
 
 export const dispatchContentHandler = async (
-  handler: string,
-  args: Object
+    handler: string,
+    ...args: Array<any>
 ): Promise<any> => {
-  try {
-    return await sendToContent({ ...args, handler });
-  } catch (e) {
-    return e;
-  }
+    try {
+        return await sendToContent({ args, handler });
+    } catch (e) {}
 };
 
 export const dispatchBackgroundHandler = async (
-  handler: string,
-  args: Object
+    handler: string,
+    ...args: Array<any>
 ): Promise<any> => {
-  try {
-    return await sendToBackground({ ...args, handler });
-  } catch (e) {
-    return e;
-  }
+    try {
+        return await sendToBackground({ args, handler });
+    } catch (e) {}
 };

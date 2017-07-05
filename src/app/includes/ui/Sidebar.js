@@ -1,59 +1,54 @@
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
-import { Provider, connect } from "react-redux";
-import ReactDOM from "react-dom";
-import store from "./../../../store";
-import "./Sidebar.styl";
-import { lastfm, vk } from "./../mutations";
-import isEqual from "lodash/fp/isEqual";
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
+import {Provider, connect} from 'react-redux';
+import ReactDOM from 'react-dom';
+import store from './../../../store';
+import './Sidebar.styl';
+import {lastfm, vk, chrome} from './../mutations';
+
 /**
- * 
+ *
  */
 
 let Sidebar = class extends PureComponent {
-  static displayName = "Sidebar";
+    static displayName = 'Sidebar';
 
-  static propTypes = {
-    lastfm: PropTypes.object
-  };
+    static propTypes = {
+        lastfm: PropTypes.object,
+        chrome: PropTypes.object,
+    };
 
-  /**
- * 
- */
-  componentDidMount() {
-    lastfm.setSession();
-  }
+    /**
+     *
+     */
+    componentDidMount() {
+       // lastfm.setSession();
+       // chrome.loadDownloadsList();
+    }
 
-  /**
-   * @method render
-   * @return {HTMLElement}
-  */
-  render() {
-    const { lastfm: { session } = {} } = this.props;
+    /**
+     * @method render
+     * @return {HTMLElement}
+     */
+    render() {
+        const {chrome: {downloads}} = this.props;
 
-    return session
-      ? <div className="gvik-sidebar">
-          {Object.keys(session).map(key => {
-            return (
-              <div key={key}>
-                {key} = {JSON.stringify(session[key])}
-              </div>
-            );
-          })}
-        </div>
-      : <span>Loading...</span>;
-  }
+        return null;
+    }
 };
 
-Sidebar = connect(({ lastfm }) => ({ lastfm }))(Sidebar);
+//Sidebar = connect(
+//    ({lastfm, chrome}) => ({lastfm, chrome}),
+//)(Sidebar);
+
 export default Sidebar;
 
-const parent = document.createElement("div");
+const parent = document.createElement('div');
 document.body.appendChild(parent);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Sidebar />
-  </Provider>,
-  parent
+    <Provider store={store}>
+        <Sidebar />
+    </Provider>,
+    parent,
 );
