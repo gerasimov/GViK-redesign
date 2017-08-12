@@ -1,4 +1,4 @@
-import BackgroundChannel from "./../../core/channels/background";
+import { BackgroundChannel } from "chrome-ex";
 
 const channel = new BackgroundChannel();
 channel.connect();

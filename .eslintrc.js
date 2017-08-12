@@ -17,10 +17,8 @@ module.exports = {
     },
     env: {
         es6: true,
-        node: true
+        node: true,
+        jest: true
     },
-    parser: "babel-eslint",
-    rules: {
-        indent: [2, 4]
-    }
+    parser: "babel-eslint"
 };

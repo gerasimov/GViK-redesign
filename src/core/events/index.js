@@ -5,94 +5,96 @@
  * @class Event
  */
 export class Event {
-    static id = 0;
-    /**
+  static id = 0;
+  /**
      * @param {string} name
      * @param {Function} handler
      * @constructor
      */
-    name: string;
-    dispatch: Function;
-    id: number;
+  name: string;
+  dispatch: Function;
+  id: number;
 
-    /**
+  /**
      *
      * @param {*} name
      * @param {*} dispatch
      */
-    constructor(name: string, dispatch: Function) {
-        this.name = name;
-        this.dispatch = dispatch;
-        this.id = Event.id++;
-    }
+  constructor(name: string, dispatch: Function) {
+    this.name = name;
+    this.dispatch = dispatch;
+    this.id = Event.id++;
+  }
 }
 /**
  * @class Events
  */
 export default class Events {
-    static map: Object = {};
+  static map: Object = {};
 
-    /**
+  /**
      * @param {string} name
      * @param {Function} handler
      * @return {Event}
      */
-    static create = (name: string, handler: Function): Event =>
-      new Event(name, handler);
+  static create = (name: string, handler: Function): Event =>
+    new Event(name, handler);
 
-    /**
-     * @param {Array<Event>} handles
+  /**
+     * @param {Array<Event>} handlers
      */
-    static push = (...handles: Array<Event>) => {
-        handles.forEach((eventHandle: Event): any => {
-            const list: Array<Event> = Events.map[eventHandle.name] || [];
+  static push(...handlers: Array<Event>) {
+    for (let eventHandler of handlers) {
+      (Events.map[eventHandler.name] =
+        Events.map[eventHandler.name] || []).push(eventHandler);
+    }
+  }
 
-            list.push(eventHandle);
-            Events.map[eventHandle.name] = list;
-        });
-    };
+  /**
+   * @param {*} events 
+   */
+  static remove(...events: Array<Event>): boolean {
+    for (let event of events) {
+      //
+      if (!(event instanceof Event)) {
+        continue;
+      }
 
-    static remove = (...events: Array<Event>): boolean => {
-        const res = events.filter((event) => {
-            if (!(event instanceof Event)) {
-                return false;
-            }
+      const list = Events.map[event.name];
 
-            const list = Events.map[event.name];
+      if (!list) {
+        continue;
+      }
 
-            if (!list || !list.length) {
-                return false;
-            }
+      const l = list.length;
+      let i = 0;
 
-            return list.some((curEvent: Event, index) => {
-                if (curEvent.id === event.id) {
-                    list.splice(index, 1);
-                    return true;
-                }
-            });
-        });
-        return res.length === events.length;
-    };
+      for (; i < l; i++) {
+        if (list[i].id === event.id) {
+          list.splice(i, 1);
+          break;
+        }
+      }
+    }
+  }
 
-    /**
+  /**
      * @param {string} eventName
      * @param {any} args
      * @return {Array}
      */
-    static dispatch = (
-      eventName: string,
-      ...args: Array<any>): Promise<any> => {
-        const list: Array<Event> = Events.map[eventName];
+  static dispatch(eventName: string, ...args: Array<any>): Promise<any> {
+    const list: Array<Event> = Events.map[eventName];
 
-        if (!list || list.length === 0) {
-            return Promise.resolve(null);
-        }
+    if (!list || list.length === 0) {
+      return Promise.resolve(null);
+    }
 
-        return Promise.all(
-          list.map((eventHandle: Event): Promise<any> => {
-              const res: any = eventHandle.dispatch(...args);
-              return res instanceof Promise ? res : Promise.resolve(res);
-          }),
-        );
-    };
+    return Promise.all(
+      list.map((eventHandle: Event): Promise<any> => {
+        const res: any = eventHandle.dispatch(...args);
+        return res instanceof Promise ? res : Promise.resolve(res);
+      })
+    );
+  }
 }

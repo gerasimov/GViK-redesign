@@ -1,4 +1,4 @@
-import ContentChannel from "./../../core/channels/content";
+import { ContentChannel } from "chrome-ex";
 
 const channel = new ContentChannel();
 channel.connect();

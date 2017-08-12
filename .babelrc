@@ -1,18 +1,19 @@
 {
-  "presets": [
-    "react",
-    [
-      "latest",
-      {
-        "es2017": false
-      }
-    ]
-  ],
+  "presets": ["react"],
   "plugins": [
+    "syntax-flow",
+    "transform-flow-strip-types",
+    [
+      "transform-es2015-modules-commonjs",
+      {
+        "allowTopLevelThis": true
+      }
+    ],
     "transform-function-bind",
     "syntax-async-functions",
     "transform-decorators-legacy",
     "transform-class-properties",
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    "external-helpers"
   ]
 }

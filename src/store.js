@@ -1,14 +1,18 @@
 import { createStore, applyMiddleware, compose } from "redux";
 
-let composeEnhancers = compose;
-const middlewares = [];
+const composeEnhancers =
+  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(
+        {
+          // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+        }
+      )
+    : compose;
 
-if (process.env.NODE_ENV !== "production") {
-    if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-        composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({});
-    }
-}
-const enhancer = composeEnhancers(applyMiddleware(...middlewares));
-const store = createStore(x => x, enhancer);
+const middleware = [];
 
-export default store;
+const enhancer = composeEnhancers(
+  applyMiddleware(...middleware)
+  // other store enhancers if any
+);
+export default createStore(x => x, enhancer);

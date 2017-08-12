@@ -1,21 +1,30 @@
 // @flow
 
-import {createMutation, connect} from './../../../core/mutations';
-import {dispatchBackgroundHandler} from './../channel';
+import { createMutation, connect } from "./../../../core/mutations";
+import { dispatchBackgroundHandler as background } from "./../channel";
 
-const loadDownloadsList = createMutation('CHROME_LOAD_DOWNLOADS_LIST',
-    (store, downloads) => ({downloads}),
-    async (apply, data) =>
-        await dispatchBackgroundHandler('downloads.search', data || {}).then(apply),
+const loadDownloadsListFailed = createMutation(
+  "FAILED GET | downloads list",
+  (state, error) => ({ error })
+);
+
+const loadDownloadsList = createMutation(
+  "GET | downloads list",
+  (_, downloads) => ({ downloads }),
+  (apply, data) =>
+    background("downloads.search", data || {})
+      .then(apply)
+      .catch(loadDownloadsListFailed)
 );
 
 export default connect(
-    'chrome',
-    {
-        downloads: [],
-    },
-    {
-        loadDownloadsList,
-    },
+  "chrome",
+  {
+    downloads: [],
+    error: null
+  },
+  {
+    loadDownloadsList,
+    loadDownloadsListFailed
+  }
 );
-

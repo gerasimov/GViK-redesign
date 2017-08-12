@@ -1,12 +1,12 @@
 /* global Promise:true */
 
-import ChannelHandler from "../../../core/channels/handler";
+import { ChannelHandler } from "chrome-ex";
 import eventHandler from "../../../core/events/eventHandler";
 
 ChannelHandler.addHandlers(
-    eventHandler,
-    new ChannelHandler({
-        name: "getVKID",
-        handler: () => Promise.resolve(window.vk.id)
-    })
+  eventHandler,
+  new ChannelHandler({
+    name: "getVKID",
+    handler: () => Promise.resolve(window.vk.id)
+  })
 );

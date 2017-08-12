@@ -1,17 +1,17 @@
 /* global chrome */
 
-import ChannelHandler from './../../../core/channels/handler';
-import {deferriffy} from './../../../core/deferred';
+import { ChannelHandler } from "chrome-ex";
+import { promisify } from "./../../../core/deferred";
 
 const dwns = chrome.downloads;
 
-const handlers = dwns ? [
+const handlers = dwns
+  ? [
+      new ChannelHandler({
+        name: "downloads.search",
+        handler: promisify(dwns.search)
+      })
+    ]
+  : null;
 
-    new ChannelHandler({
-        name   : 'downloads.search',
-        handler: deferriffy(dwns.search),
-    }),
-
-] : null;
-
-export  default  handlers;
+export default handlers;
